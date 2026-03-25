@@ -1,0 +1,81 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+<!--
+    <record model="ir.ui.view" id="odoo_bezizvestnyi.list">
+      <field name="name">odoo_bezizvestnyi list</field>
+      <field name="model">odoo_bezizvestnyi.odoo_bezizvestnyi</field>
+      <field name="arch" type="xml">
+        <list>
+          <field name="name"/>
+          <field name="value"/>
+          <field name="value2"/>
+        </list>
+      </field>
+    </record>
+-->
+
+    <!-- actions opening views on models -->
+<!--
+    <record model="ir.actions.act_window" id="odoo_bezizvestnyi.action_window">
+      <field name="name">odoo_bezizvestnyi window</field>
+      <field name="res_model">odoo_bezizvestnyi.odoo_bezizvestnyi</field>
+      <field name="view_mode">list,form</field>
+    </record>
+-->
+
+    <!-- server action to the one above -->
+<!--
+    <record model="ir.actions.server" id="odoo_bezizvestnyi.action_server">
+      <field name="name">odoo_bezizvestnyi server</field>
+      <field name="model_id" ref="model_odoo_bezizvestnyi_odoo_bezizvestnyi"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "list,form",
+          "res_model": model._name,
+        }
+      </field>
+    </record>
+-->
+
+    <!-- Top menu item -->
+<!--
+    <menuitem name="odoo_bezizvestnyi" id="odoo_bezizvestnyi.menu_root"/>
+-->
+    <!-- menu categories -->
+<!--
+    <menuitem name="Menu 1" id="odoo_bezizvestnyi.menu_1" parent="odoo_bezizvestnyi.menu_root"/>
+    <menuitem name="Menu 2" id="odoo_bezizvestnyi.menu_2" parent="odoo_bezizvestnyi.menu_root"/>
+-->
+    <!-- actions -->
+<!--
+    <menuitem name="List" id="odoo_bezizvestnyi.menu_1_list" parent="odoo_bezizvestnyi.menu_1"
+              action="odoo_bezizvestnyi.action_window"/>
+    <menuitem name="Server to list" id="odoo_bezizvestnyi" parent="odoo_bezizvestnyi.menu_2"
+              action="odoo_bezizvestnyi.action_server"/>
+-->
+  <record id="view_order_form_inherit_odoo_bezizvestnyi" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.odoo.bezizvestnyi</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>  <!-- ← вот эта ссылка на оригинальный view -->
+        <field name="arch" type="xml">
+
+            <!-- Вставляем поле "Ответственный за выдачу товара" строго после partner_id в блоке "Customer" -->
+            <xpath expr="//group[@name='partner_details']/field[@name='partner_id']" position="after">
+                <field name="responsible_employee_id" required="1"/>
+            </xpath>
+
+            <xpath expr="//field[@name='responsible_employee_id']" position="after">
+                <field name="new_field_manual_change" invisible="1" force_save="1"/>
+                <field name="new_field"
+                       readonly="state != 'draft'"
+                       invisible="state == 'sale'"/>
+            </xpath>
+
+        </field>
+    </record>
+
+  </data>
+</odoo>
